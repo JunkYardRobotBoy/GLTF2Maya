@@ -19,7 +19,7 @@ for %%V in (2026 2027) do (
         if not exist "%MAYADIR%\%%V\plug-ins" mkdir "%MAYADIR%\%%V\plug-ins"
         copy /Y "%SRC%GLTF2Maya.py" "%MAYADIR%\%%V\plug-ins\" >nul && echo Installed to %MAYADIR%\%%V\plug-ins
         if not exist "%MAYADIR%\%%V\prefs\icons" mkdir "%MAYADIR%\%%V\prefs\icons"
-        copy /Y "%SRC%icons\GLTF2Maya*.png" "%MAYADIR%\%%V\prefs\icons\" >nul && echo Installed icons to %MAYADIR%\%%V\prefs\icons
+        copy /Y "%SRC%icons\GLTF2Maya*.*" "%MAYADIR%\%%V\prefs\icons\" >nul && echo Installed icons to %MAYADIR%\%%V\prefs\icons
     )
 )
 echo.

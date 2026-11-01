@@ -1227,7 +1227,7 @@ if IN_MAYA:
 
 SHELF_NAME = 'glTF'            # the shelf Maya2glTF's installer creates; shared with the exporter
 SHELF_BUTTON_LABEL = 'Import'
-SHELF_ICON = 'GLTF2Maya.png'
+SHELF_ICON = 'GLTF2Maya.svg'   # Maya 2020+ rasterises SVG at the UI scale; GLTF2Maya.png + _150/_200 are fallbacks
 SHELF_COMMAND = 'import GLTF2Maya\nGLTF2Maya.show_ui()'
 
 
