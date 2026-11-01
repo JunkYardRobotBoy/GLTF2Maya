@@ -34,8 +34,8 @@ that group, so the imported data itself is untouched — unparent or freeze it i
 ## Install
 
 1. Run `install_GLTF2Maya.bat`. It copies `GLTF2Maya.py` to `Documents\maya\<2026|2027>\plug-ins\`
-   (the plug-in) and to `Documents\maya\scripts\` (so `import GLTF2Maya` works from Python).
-   Doing it by hand: the same two copies.
+   (the plug-in) and to `Documents\maya\scripts\` (so `import GLTF2Maya` works from Python), and the
+   shelf icon to `prefs\icons\`. Doing it by hand: the same copies.
 2. In Maya: **Windows > Settings/Preferences > Plug-in Manager**, tick *Loaded* and *Auto load*
    for `GLTF2Maya.py`.
 
@@ -43,6 +43,8 @@ that group, so the imported data itself is untouched — unparent or freeze it i
 
 Three ways:
 
+- The **Import** button on the **glTF** shelf. The plug-in adds it when it loads (the shelf is the one
+  Maya2glTF creates; it is created if missing).
 - **File > Import…**, choose the `glTF` file type. Uses the options last set in the window below.
 - The options window:
 

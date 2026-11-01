@@ -1225,6 +1225,40 @@ if IN_MAYA:
         GltfTranslator = None
 
 
+SHELF_NAME = 'glTF'            # the shelf Maya2glTF's installer creates; shared with the exporter
+SHELF_BUTTON_LABEL = 'Import'
+SHELF_ICON = 'GLTF2Maya.png'
+SHELF_COMMAND = 'import GLTF2Maya\nGLTF2Maya.show_ui()'
+
+
+def ensure_shelf_button():
+    """Adds an Import button to the glTF shelf (creating the shelf if needed). Safe to call repeatedly."""
+    if not IN_MAYA or om.MGlobal.mayaState() != om.MGlobal.kInteractive:
+        return
+    try:
+        import maya.mel as mel
+        top = mel.eval('$tmp = $gShelfTopLevel')
+        if not top or not cmds.tabLayout(top, exists=True):
+            return
+        shelves = cmds.tabLayout(top, query=True, childArray=True) or []
+        if SHELF_NAME not in shelves:
+            mel.eval('addNewShelfTab "%s"' % SHELF_NAME)
+        shelf = top + '|' + SHELF_NAME
+        for child in cmds.shelfLayout(shelf, query=True, childArray=True) or []:
+            path = shelf + '|' + child
+            if cmds.shelfButton(path, exists=True) and cmds.shelfButton(path, query=True, label=True) == SHELF_BUTTON_LABEL \
+                    and 'GLTF2Maya' in (cmds.shelfButton(path, query=True, command=True) or ''):
+                cmds.shelfButton(path, edit=True, image=SHELF_ICON, image1=SHELF_ICON, command=SHELF_COMMAND,
+                                 sourceType='python')
+                return
+        cmds.shelfButton(parent=shelf, label=SHELF_BUTTON_LABEL, annotation='Import glTF / GLB (GLTF2Maya)',
+                         image=SHELF_ICON, image1=SHELF_ICON, style='iconOnly', width=35, height=35,
+                         command=SHELF_COMMAND, sourceType='python')
+        om.MGlobal.displayInfo('GLTF2Maya: added an Import button to the %s shelf' % SHELF_NAME)
+    except Exception as exc:
+        om.MGlobal.displayWarning('GLTF2Maya: could not add the shelf button (%s)' % exc)
+
+
 def initializePlugin(mobject):
     plugin = om.MFnPlugin(mobject, 'JunkYardRobotBoy', __version__, 'Any')
     plugin.registerCommand(GltfImportCmd.kName, GltfImportCmd.creator, GltfImportCmd.syntax)
@@ -1233,6 +1267,11 @@ def initializePlugin(mobject):
             plugin.registerFileTranslator(GltfTranslator.kName, None, GltfTranslator.creator, None, None, False)
         except Exception as exc:
             om.MGlobal.displayWarning('GLTF2Maya: file translator not registered (%s); use the gltf2maya command' % exc)
+    # shelves are built after auto-loaded plug-ins, so defer until the UI is up
+    try:
+        cmds.evalDeferred(ensure_shelf_button, lowestPriority=True)
+    except Exception:
+        pass
 
 
 def uninitializePlugin(mobject):
